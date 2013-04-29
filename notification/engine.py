@@ -3,7 +3,10 @@ import time
 import logging
 import traceback
 
-import cPickle as pickle
+try:
+    from django.utils.six.moves import cPickle as pickle
+except ImportError:
+    import pickle
 
 from django.conf import settings
 from django.core.mail import mail_admins
@@ -25,7 +28,7 @@ def send_all(*args):
         lock = FileLock(args[0])
     else:
         lock = FileLock("send_notices")
-    
+
     logging.debug("acquiring lock...")
     try:
         lock.acquire(LOCK_WAIT_TIMEOUT)
@@ -36,10 +39,10 @@ def send_all(*args):
         logging.debug("waiting for the lock timed out. quitting.")
         return
     logging.debug("acquired.")
-    
+
     batches, sent, sent_actual = 0, 0, 0
     start_time = time.time()
-    
+
     try:
         # nesting the try statement to be Python 2.4
         try:
@@ -86,7 +89,7 @@ def send_all(*args):
         logging.debug("releasing lock...")
         lock.release()
         logging.debug("released.")
-    
+
     logging.info("")
     logging.info("{} batches, {} sent".format(batches, sent,))
     logging.info("done in {:.2f} seconds".format(time.time() - start_time))
