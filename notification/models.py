@@ -1,13 +1,9 @@
-try:
-    from django.utils.six.moves import cPickle as pickle
-except ImportError:
-    import pickle
-
 from django.db import models
 from django.db.models.query import QuerySet
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.six.moves import cPickle as pickle
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import get_language, activate
 
